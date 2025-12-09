@@ -19,7 +19,7 @@ public class CartController {
         this.repo = repo;
     }
 
-    // 1. ADD ITEM TO CART
+    // ADD ITEM TO CART
     @GetMapping("/addToCart/{id}")
     public String addToCart(@PathVariable Long id, HttpSession session) {
         // Get the cart from the session, or create a new one if empty
@@ -37,7 +37,7 @@ public class CartController {
         return "redirect:/customer"; // Stay on shopping page
     }
 
-    // 2. VIEW CART PAGE
+    // VIEW CART PAGE
     @GetMapping("/cart")
     public String viewCart(HttpSession session, Model model) {
         List<InventoryItem> cart = (List<InventoryItem>) session.getAttribute("cart");
@@ -54,7 +54,7 @@ public class CartController {
         return "cart_view";
     }
 
-    // 3. EMPTY CART
+    // EMPTY CART
     @GetMapping("/clearCart")
     public String clearCart(HttpSession session) {
         session.removeAttribute("cart");

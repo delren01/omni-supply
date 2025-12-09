@@ -12,15 +12,15 @@ public class Order {
 
     private String customerName;
 
-    // --- RELATIONSHIP: One Order links to One Item ---
+    // One Order links to One Item
     @ManyToOne
     @JoinColumn(name = "item_id") // Creates a column "item_id" in the database
     private InventoryItem item;
 
     private int quantity;
-    private String status;     // e.g., "Pending"
-    private String packaging;  // e.g., "Box"
-    private String carrier;    // e.g., "FedEx"
+    private String status;     // ex: "Pending"
+    private String packaging;  // ex: "Box"
+    private String carrier;    // ex: "FedEx"
 
     public Order() {
     }
@@ -34,7 +34,7 @@ public class Order {
         this.carrier = "TBD";
     }
 
-    // --- GETTERS AND SETTERS ---
+    //  GETTERS AND SETTERS
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 

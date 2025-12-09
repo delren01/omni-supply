@@ -5,17 +5,13 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
-@Entity // <--- TELLS SPRING: "Map this class to a database table"
+@Entity
 public class InventoryItem {
-
-    // --- NEW FIELD: PRIMARY KEY ---
     // Every database table needs a unique ID.
-    // We add this because your original code didn't have one.
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // Auto-increments (1, 2, 3...)
     private Long id;
 
-    // --- YOUR ORIGINAL FIELDS ---
     private String category;
     private String name;
     private String size;
@@ -25,8 +21,6 @@ public class InventoryItem {
     public InventoryItem() {
     }
 
-    // --- CONSTRUCTOR 2: YOUR ORIGINAL ---
-    // Useful for when you want to create items manually in Java
     public InventoryItem(String category, String name, String size, double price, int quantity) {
         this.category = category;
         this.name = name;
@@ -36,8 +30,6 @@ public class InventoryItem {
     }
 
     // --- GETTERS AND SETTERS ---
-    // Thymeleaf (HTML) needs these to read/write data
-
     public Long getId() {
         return id;
     }

@@ -16,7 +16,7 @@ public class InventoryController {
         this.repo = repo;
     }
 
-    // ROOT URL: Redirects everyone to the Login Page first
+    // Redirects everyone to the Login Page first
     @GetMapping("/")
     public String root() {
         return "redirect:/login";
@@ -42,7 +42,7 @@ public class InventoryController {
         return "customer_view";
     }
 
-    // Manager Access
+    // Manager Access:
 
     // HANDLE "ADD ITEM" FORM SUBMIT
     @PostMapping("/save")
