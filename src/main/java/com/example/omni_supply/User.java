@@ -1,0 +1,60 @@
+package com.example.omni_supply;
+
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "app_users") // <--- RENAMED TABLE to avoid SQL errors
+public class User {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String username;
+    private String password;
+    private String role; // Stores "MANAGER" or "CUSTOMER"
+
+    // --- 1. REQUIRED EMPTY CONSTRUCTOR ---
+    public User() {
+    }
+
+    // --- 2. CONSTRUCTOR FOR REGISTERING ---
+    public User(String username, String password, String role) {
+        this.username = username;
+        this.password = password;
+        this.role = role;
+    }
+
+    // --- 3. GETTERS AND SETTERS ---
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+}
