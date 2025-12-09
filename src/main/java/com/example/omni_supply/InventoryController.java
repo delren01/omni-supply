@@ -6,6 +6,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+// Import List to iterate over items
+import java.util.List;
+
 @Controller
 public class InventoryController {
 
@@ -22,14 +25,34 @@ public class InventoryController {
         return "redirect:/login";
     }
 
-    // MANAGER DASHBOARD: Full access (Edit/Delete/Add)
+    // MANAGER DASHBOARD: Full access with Stats
     @GetMapping("/manager")
     public String viewManagerPage(Model model) {
         // Fetch all items from the database
-        var items = repo.findAll();
-        // Send items to the HTML file
+        List<InventoryItem> items = repo.findAll();
+
+        // Initialize variables for calculations
+        int totalItems = items.size();
+        int lowStockCount = 0;
+        double totalValue = 0.0;
+
+        // Loop through items to calculate stats
+        for (InventoryItem item : items) {
+            // Count low stock (less than 10)
+            if (item.getQuantity() < 10) {
+                lowStockCount++;
+            }
+            // Calculate value (Price * Quantity)
+            totalValue += (item.getPrice() * item.getQuantity());
+        }
+
+        // Send calculated stats + list to the HTML file
         model.addAttribute("items", items);
-        // Load "dashboard.html"
+        model.addAttribute("totalItems", totalItems);
+        model.addAttribute("lowStockCount", lowStockCount);
+        model.addAttribute("totalValue", totalValue);
+
+        // Loads dashboard.html
         return "dashboard";
     }
 
@@ -38,11 +61,10 @@ public class InventoryController {
     public String viewCustomerPage(Model model) {
         var items = repo.findAll();
         model.addAttribute("items", items);
-        // Load "customer_view.html"
         return "customer_view";
     }
 
-    // Manager Access:
+    // --- Manager Actions ---
 
     // HANDLE "ADD ITEM" FORM SUBMIT
     @PostMapping("/save")
@@ -54,27 +76,25 @@ public class InventoryController {
     // SHOW EDIT FORM
     @GetMapping("/edit/{id}")
     public String showEditForm(@PathVariable("id") Long id, Model model) {
-        // Find the item by ID, or throw error if missing
         InventoryItem item = repo.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid item Id:" + id));
 
         model.addAttribute("item", item);
-        return "edit_item"; // Loads the edit_item.html file
+        return "edit_item";
     }
 
     // SAVE UPDATES
     @PostMapping("/update/{id}")
     public String updateItem(@PathVariable("id") Long id, InventoryItem item) {
-        // Force the ID to match so it updates the existing row
         item.setId(id);
         repo.save(item);
-        return "redirect:/manager"; // Go back to Manager Dashboard
+        return "redirect:/manager";
     }
 
     // DELETE ITEM
     @GetMapping("/delete/{id}")
     public String deleteItem(@PathVariable("id") Long id) {
         repo.deleteById(id);
-        return "redirect:/manager"; // Go back to Manager Dashboard
+        return "redirect:/manager";
     }
 }

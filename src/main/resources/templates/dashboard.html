@@ -4,113 +4,213 @@
     <title>OmniSupply Dashboard</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+
+    <link th:href="@{/css/dashboard.css}" rel="stylesheet">
 
     <link th:href="@{/css/styles.css}" rel="stylesheet">
 </head>
-<body class="bg-light">
+<body>
 
-<div class="container mt-5">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h1 class="d-inline align-middle">📦 OmniSupply Inventory</h1>
-            <span class="badge bg-primary fs-6 ms-2 align-middle">Manager Mode</span>
-        </div>
+<header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
+    <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6" href="#">
+        <img th:src="@{../css/images/logo-transparent.png}"
+             alt="Logo"
+             height="32"
+             class="d-inline-block align-text-top me-2 bg-white rounded p-1">OmniSupply
+    </a>
 
-        <a href="/login" class="btn btn-outline-danger">
-            <i class="bi bi-box-arrow-right"></i> Logout
-        </a>
-    </div>
-
-    <div class="card shadow-sm mb-5">
-        <div class="card-header bg-white">
-            <h5 class="mb-0">Add New Item</h5>
-        </div>
-        <div class="card-body">
-            <form action="/save" method="post" class="row g-3">
-                <div class="col-md-3">
-                    <label>Item Name</label>
-                    <input type="text" name="name" class="form-control" placeholder="e.g. Denim Jacket" required>
-                </div>
-                <div class="col-md-3">
-                    <label>Category</label>
-                    <select name="category" class="form-select">
-                        <option>Tops</option>
-                        <option>Bottoms</option>
-                        <option>Footwear</option>
-                        <option>Accessories</option>
-                    </select>
-                </div>
-                <div class="col-md-2">
-                    <label>Size</label>
-                    <input type="text" name="size" class="form-control" placeholder="M">
-                </div>
-                <div class="col-md-2">
-                    <label>Price ($)</label>
-                    <input type="number" step="0.01" name="price" class="form-control" placeholder="0.00" required>
-                </div>
-                <div class="col-md-2">
-                    <label>Quantity</label>
-                    <input type="number" name="quantity" class="form-control" placeholder="0" required>
-                </div>
-                <div class="col-12 text-end">
-                    <button type="submit" class="btn btn-success px-4">Add Item</button>
-                </div>
-            </form>
+    <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="navbar-nav">
+        <div class="nav-item text-nowrap">
+            <a class="nav-link px-3" href="/login">Sign out</a>
         </div>
     </div>
+</header>
 
-    <div class="card shadow-sm">
-        <div class="card-header bg-dark text-white">
-            <h5 class="mb-0">Current Stock</h5>
-        </div>
-        <table class="table table-hover mb-0">
-            <thead>
-            <tr>
-                <th>ID</th>
-                <th>Category</th>
-                <th>Name</th>
-                <th>Size</th>
-                <th>Price</th>
-                <th>Qty</th>
-                <th>Action</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="item : ${items}">
-                <td th:text="${item.id}">1</td>
-                <td th:text="${item.category}">Category</td>
-                <td th:text="${item.name}">Product Name</td>
-                <td th:text="${item.size}">L</td>
-                <td th:text="${'$' + item.price}">$0.00</td>
-                <td>
-                        <span th:text="${item.quantity}"
-                              th:class="${item.quantity < 10} ? 'badge bg-danger' : 'badge bg-secondary'">
-                            10
-                        </span>
-                </td>
-                <td>
-                    <a th:href="@{/edit/{id}(id=${item.id})}" class="btn btn-sm btn-outline-primary" title="Edit Item">
-                        <i class="bi bi-pencil-square"></i>
-                    </a>
+<div class="container-fluid">
+    <div class="row">
 
-                    <a th:href="@{/delete/{id}(id=${item.id})}" class="btn btn-sm btn-outline-danger"
-                       onclick="return confirm('Delete this item?');" title="Delete Item">
-                        <i class="bi bi-trash"></i>
-                    </a>
-                </td>
-            </tr>
+        <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+            <div class="position-sticky pt-3">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#">
+                            <i class="bi bi-house-door"></i> Dashboard
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
 
-            <tr th:if="${#lists.isEmpty(items)}">
-                <td colspan="7" class="text-center py-4 text-muted">
-                    No inventory items found. Add one above!
-                </td>
-            </tr>
-            </tbody>
-        </table>
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-4 border-bottom">
+                <h1 class="page-title">Inventory Overview</h1>
+                <div class="btn-toolbar mb-2 mb-md-0">
+                    <div class="btn-group me-2">
+                        <button type="button" class="btn btn-sm btn-outline-secondary">Share</button>
+                        <button type="button" class="btn btn-sm btn-outline-secondary">Export</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-4">
+                <div class="col-md-4">
+                    <div class="card h-100 border-start border-4 border-primary">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <div class="stat-label">Total Items</div>
+                                    <div class="stat-value text-dark" th:text="${totalItems}">0</div>
+                                </div>
+                                <div class="stat-icon blue">
+                                    <i class="bi bi-box-seam"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card h-100 border-start border-4 border-danger">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <div class="stat-label">Low Stock</div>
+                                    <div class="stat-value"
+                                         th:text="${lowStockCount}"
+                                         th:classappend="${lowStockCount > 0} ? 'text-danger' : 'text-success'">
+                                        0
+                                    </div>
+                                </div>
+                                <div class="stat-icon red">
+                                    <i class="bi bi-exclamation-triangle"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card h-100 border-start border-4 border-success">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <div class="stat-label">Total Value</div>
+                                    <div class="stat-value text-success"
+                                         th:text="${#numbers.formatCurrency(totalValue)}">
+                                        $0.00
+                                    </div>
+                                </div>
+                                <div class="stat-icon green">
+                                    <i class="bi bi-currency-dollar"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-header bg-white">
+                    <h5 class="section-title"><i class="bi bi-plus-circle me-2"></i>Add New Item</h5>
+                </div>
+                <div class="card-body">
+                    <form action="/save" method="post" class="row g-3">
+                        <div class="col-md-3">
+                            <label class="form-label fw-bold small">Item Name</label>
+                            <input type="text" name="name" class="form-control" placeholder="e.g. Denim Jacket" required>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label fw-bold small">Category</label>
+                            <select name="category" class="form-select">
+                                <option>Tops</option>
+                                <option>Bottoms</option>
+                                <option>Footwear</option>
+                                <option>Accessories</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label fw-bold small">Size</label>
+                            <input type="text" name="size" class="form-control" placeholder="M">
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label fw-bold small">Price ($)</label>
+                            <input type="number" step="0.01" name="price" class="form-control" placeholder="0.00" required>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label fw-bold small">Quantity</label>
+                            <input type="number" name="quantity" class="form-control" placeholder="0" required>
+                        </div>
+                        <div class="col-12 text-end">
+                            <button type="submit" class="btn btn-primary px-4">
+                                <i class="bi bi-check-lg me-1"></i> Add Item
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card mb-5">
+                <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                    <h5 class="section-title"><i class="bi bi-list-ul me-2"></i>Current Stock</h5>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Category</th>
+                            <th>Name</th>
+                            <th>Size</th>
+                            <th>Price</th>
+                            <th>Qty</th>
+                            <th>Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="item : ${items}">
+                            <td class="text-muted" th:text="${item.id}">1</td>
+                            <td><span class="badge bg-light text-dark border" th:text="${item.category}">Category</span></td>
+                            <td class="fw-bold" th:text="${item.name}">Product Name</td>
+                            <td th:text="${item.size}">L</td>
+                            <td th:text="${'$' + item.price}">$0.00</td>
+                            <td>
+                                <span th:text="${item.quantity}"
+                                      th:class="${item.quantity < 10} ? 'badge bg-danger' : 'badge bg-success'">
+                                    10
+                                </span>
+                            </td>
+                            <td>
+                                <a th:href="@{/edit/{id}(id=${item.id})}" class="btn btn-sm btn-outline-primary me-1" title="Edit">
+                                    <i class="bi bi-pencil-square"></i>
+                                </a>
+                                <a th:href="@{/delete/{id}(id=${item.id})}" class="btn btn-sm btn-outline-danger"
+                                   onclick="return confirm('Delete this item?');" title="Delete">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(items)}">
+                            <td colspan="7" class="text-center py-5 text-muted">
+                                <i class="bi bi-box-seam display-4 d-block mb-3"></i>
+                                No inventory items found. Add one above!
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </main>
     </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script th:src="@{../css/js/dashboard.js}"></script>
 
 </body>
 </html>
