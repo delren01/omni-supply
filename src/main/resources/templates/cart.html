@@ -116,9 +116,11 @@
                         <span class="fw-bold fs-5">Total</span>
                         <span class="fw-bold fs-4 text-primary" th:text="${'$' + #numbers.formatDecimal(total, 1, 2)}">$0.00</span>
                     </div>
-                    <button class="btn btn-primary w-100 py-3 rounded-3 fw-bold shadow-sm" onclick="alert('Checkout Feature Coming Soon!')">
+                    <a href="/checkout"
+                       class="btn btn-primary w-100 py-3 rounded-3 fw-bold shadow-sm"
+                       onclick="return confirm('Are you sure you want to purchase these items?')">
                         Proceed to Checkout
-                    </button>
+                    </a>
                     <div class="text-center mt-3">
                         <small class="text-muted"><i class="bi bi-shield-lock me-1"></i> Secure Checkout</small>
                     </div>

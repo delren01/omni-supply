@@ -16,7 +16,9 @@ public class InventoryItem {
     private String name;
     private String size;
     private double price;
-    private int quantity;
+    private int quantity;private String sku;
+    private String location;
+
 
     public InventoryItem() {
     }
@@ -77,6 +79,17 @@ public class InventoryItem {
     public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
+
+    public String getSku() {
+        return sku;
+    }
+    public void setSku(String sku) {
+        this.sku = sku;
+    }
+
+
+    public String getLocation() { return location; }
+    public void setLocation(String location) { this.location = location; }
 
 
     @Override
