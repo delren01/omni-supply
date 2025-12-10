@@ -59,8 +59,7 @@ h1, h2, h3, h4, h5, h6 { font-weight: 700; color: var(--text-dark); letter-spaci
 .stat-icon.red { background-color: var(--red-icon); color: var(--stat-red-text); }
 .stat-icon.green { background-color: var(--green-icon); color: var(--stat-green-text); }
 
-/* LOGIN PAGE */
-
+/* LOGIN PAGE (DESKTOP DEFAULT) */
 .login-page-body {
     height: 100vh;
     width: 100vw;
@@ -97,7 +96,7 @@ h1, h2, h3, h4, h5, h6 { font-weight: 700; color: var(--text-dark); letter-spaci
     z-index: 10;
     width: 100%;
     max-width: 380px;
-    padding: 20px; /* Added padding for small screens */
+    padding: 20px;
 }
 
 /* Glass Card */
@@ -338,7 +337,16 @@ h1, h2, h3, h4, h5, h6 { font-weight: 700; color: var(--text-dark); letter-spaci
 /* MOBILE RESPONSIVENESS */
 
 @media (max-width: 768px) {
-    /* Login Page */
+    /* LOCK LOGIN PAGE ON MOBILE */
+    .login-page-body {
+        width: 100%;       /* Fixes horizontal scroll caused by 100vw */
+        height: 100vh;     /* Standard Fallback */
+        height: 100dvh;    /* Modern fix for URL bar jumpiness */
+        overflow: hidden;  /* Forcefully hides all scrollbars */
+        position: fixed;   /* Locks the body to the viewport */
+    }
+
+    /* Login Page Content */
     .login-container {
         max-width: 100%;
         padding: 15px;
