@@ -42,7 +42,7 @@ public class InventoryController {
     public String viewManagerPage(Model model, @RequestParam(value = "keyword", required = false) String keyword) {
         List<InventoryItem> items;
         if (keyword != null && !keyword.isEmpty()) {
-            items = inventoryRepo.findByNameContainingIgnoreCase(keyword);
+            items = inventoryRepo.searchEverything(keyword);
         } else {
             items = inventoryRepo.findAll();
         }
@@ -113,19 +113,24 @@ public class InventoryController {
     @GetMapping("/customer")
     public String viewCustomerPage(Model model, HttpSession session) {
         model.addAttribute("items", inventoryRepo.findAll());
-        List<InventoryItem> cart = (List<InventoryItem>) session.getAttribute("cart");
+
+        // Get cart or create new empty list
+        List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
         if (cart == null) cart = new ArrayList<>();
+
         model.addAttribute("cartItems", cart);
         return "customer_view";
     }
 
     @GetMapping("/cart")
     public String viewCart(HttpSession session, Model model) {
-        List<InventoryItem> cart = (List<InventoryItem>) session.getAttribute("cart");
+        List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
         if (cart == null) cart = new ArrayList<>();
 
         double total = 0.0;
-        for (InventoryItem item : cart) total += item.getPrice();
+        for (CartItem cartItem : cart) {
+            total += cartItem.getTotalPrice();
+        }
 
         model.addAttribute("cartItems", cart);
         model.addAttribute("total", total);
@@ -134,12 +139,72 @@ public class InventoryController {
 
     @GetMapping("/addToCart/{id}")
     public String addToCart(@PathVariable("id") Long id, HttpSession session) {
-        List<InventoryItem> cart = (List<InventoryItem>) session.getAttribute("cart");
+        List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
         if (cart == null) cart = new ArrayList<>();
 
-        inventoryRepo.findById(id).ifPresent(cart::add);
+        // Check if product is already in cart
+        CartItem existing = null;
+        for (CartItem c : cart) {
+            if (c.getItem().getId().equals(id)) {
+                existing = c;
+                break;
+            }
+        }
+
+        InventoryItem dbItem = inventoryRepo.findById(id).orElse(null);
+        if (dbItem != null) {
+            if (existing != null) {
+                //  If exists, increment quantity (CHECK STOCK FIRST)
+                if (existing.getQuantity() < dbItem.getQuantity()) {
+                    existing.setQuantity(existing.getQuantity() + 1);
+                }
+            } else {
+                // If new, add grouped item
+                cart.add(new CartItem(dbItem, 1));
+            }
+        }
+
         session.setAttribute("cart", cart);
         return "redirect:/customer";
+    }
+
+    @PostMapping("/cart/update")
+    public String updateCartQuantity(@RequestParam("id") Long id,
+                                     @RequestParam("quantity") int quantity,
+                                     HttpSession session) {
+        List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
+        if (cart == null) return "redirect:/cart";
+
+        // Remove item if quantity is 0 or less
+        if (quantity <= 0) {
+            cart.removeIf(c -> c.getItem().getId().equals(id));
+        } else {
+            // Find item and update quantity safely
+            for (CartItem c : cart) {
+                if (c.getItem().getId().equals(id)) {
+                    // Check database for max stock
+                    InventoryItem dbItem = inventoryRepo.findById(id).orElse(null);
+                    if (dbItem != null) {
+                        // Cap quantity at max stock
+                        int safeQty = Math.min(quantity, dbItem.getQuantity());
+                        c.setQuantity(safeQty);
+                    }
+                    break;
+                }
+            }
+        }
+
+        session.setAttribute("cart", cart);
+        return "redirect:/cart";
+    }
+
+    @GetMapping("/cart/remove/{id}")
+    public String removeCartItem(@PathVariable("id") Long id, HttpSession session) {
+        List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
+        if (cart != null) {
+            cart.removeIf(c -> c.getItem().getId().equals(id));
+        }
+        return "redirect:/cart";
     }
 
     @GetMapping("/clearCart")
@@ -150,13 +215,16 @@ public class InventoryController {
 
     @GetMapping("/checkout")
     public String checkout(HttpSession session) {
-        List<InventoryItem> cart = (List<InventoryItem>) session.getAttribute("cart");
+        List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
+
         if (cart != null && !cart.isEmpty()) {
-            for (InventoryItem cartItem : cart) {
-                InventoryItem dbItem = inventoryRepo.findById(cartItem.getId()).orElse(null);
+            for (CartItem cartItem : cart) {
+                InventoryItem dbItem = inventoryRepo.findById(cartItem.getItem().getId()).orElse(null);
+
                 if (dbItem != null) {
-                    int newQuantity = Math.max(0, dbItem.getQuantity() - 1);
-                    dbItem.setQuantity(newQuantity);
+                    // Reduce stock by the CART QUANTITY, not just 1
+                    int newStock = dbItem.getQuantity() - cartItem.getQuantity();
+                    dbItem.setQuantity(Math.max(0, newStock));
                     inventoryRepo.save(dbItem);
                 }
             }

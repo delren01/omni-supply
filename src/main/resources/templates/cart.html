@@ -22,7 +22,6 @@
         </a>
 
         <div class="d-flex align-items-center gap-3">
-
             <a th:if="${session.role == 'MANAGER'}"
                href="/manager"
                class="btn btn-sm btn-outline-dark fw-bold d-flex align-items-center gap-2">
@@ -63,31 +62,59 @@
         <div class="col-lg-8">
             <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
                 <div class="card-body p-0">
+
                     <div class="bg-light px-4 py-3 border-bottom d-none d-md-flex text-muted small fw-bold text-uppercase">
                         <div class="flex-grow-1">Product</div>
-                        <div style="width: 100px;" class="text-end">Price</div>
-                    </div>
+                        <div style="width: 120px;" class="text-center">Quantity</div>
+                        <div style="width: 100px;" class="text-end">Total</div>
+                        <div style="width: 40px;"></div> </div>
 
-                    <div th:each="item : ${cartItems}" class="cart-item d-flex align-items-center px-4 py-3 border-bottom">
+                    <div th:each="cartItem : ${cartItems}" class="cart-item d-flex align-items-center px-4 py-3 border-bottom">
+
                         <div class="cart-item-icon bg-light text-primary rounded-3 d-flex align-items-center justify-content-center me-3" style="width: 60px; height: 60px;">
                             <i class="bi bi-box-seam fs-4"></i>
                         </div>
 
                         <div class="flex-grow-1">
-                            <h6 class="fw-bold mb-0" th:text="${item.name}">Item Name</h6>
-                            <small class="text-muted" th:text="${item.category}">Category</small>
+                            <h6 class="fw-bold mb-0" th:text="${cartItem.item.name}">Item Name</h6>
+                            <small class="text-muted" th:text="${cartItem.item.category}">Category</small>
+                            <div class="small text-muted mt-1">
+                                Unit Price: <span th:text="${'$' + #numbers.formatDecimal(cartItem.item.price, 1, 2)}"></span>
+                            </div>
+                        </div>
+
+                        <div style="width: 120px;" class="px-2">
+                            <form action="/cart/update" method="post">
+                                <input type="hidden" name="id" th:value="${cartItem.item.id}" />
+                                <input type="number"
+                                       name="quantity"
+                                       th:value="${cartItem.quantity}"
+                                       min="0"
+                                       th:max="${cartItem.item.quantity}"
+                                       onchange="this.form.submit()"
+                                       class="form-control text-center shadow-none border-secondary-subtle"
+                                       style="font-weight: bold;">
+                            </form>
                         </div>
 
                         <div class="fw-bold text-dark fs-5 text-end" style="width: 100px;"
-                             th:text="${'$' + #numbers.formatDecimal(item.price, 1, 2)}">
+                             th:text="${'$' + #numbers.formatDecimal(cartItem.totalPrice, 1, 2)}">
                             $0.00
+                        </div>
+
+                        <div style="width: 40px;" class="text-end">
+                            <a th:href="@{/cart/remove/{id}(id=${cartItem.item.id})}"
+                               class="text-danger opacity-50 hover-opacity-100"
+                               title="Remove item">
+                                <i class="bi bi-x-circle-fill fs-5"></i>
+                            </a>
                         </div>
                     </div>
                 </div>
 
                 <div class="card-footer bg-white p-3 border-0">
                     <a href="/clearCart" class="text-danger text-decoration-none small fw-bold d-flex align-items-center">
-                        <i class="bi bi-trash me-1"></i> Clear Cart
+                        <i class="bi bi-trash me-1"></i> Clear Entire Cart
                     </a>
                 </div>
             </div>

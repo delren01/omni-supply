@@ -44,6 +44,17 @@
                 <div class="card-body p-4">
                     <form th:action="@{/update/{id}(id=${item.id})}" th:object="${item}" method="post">
 
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                <label class="form-label small fw-bold text-muted text-uppercase">SKU</label>
+                                <input type="text" th:field="*{sku}" class="form-control bg-light border-0" placeholder="SKU-001">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label small fw-bold text-muted text-uppercase">Location</label>
+                                <input type="text" th:field="*{location}" class="form-control bg-light border-0" placeholder="Aisle 1">
+                            </div>
+                        </div>
+
                         <div class="mb-4">
                             <label class="form-label small fw-bold text-muted text-uppercase">Product Name</label>
                             <input type="text" th:field="*{name}" class="form-control form-control-lg bg-light border-0" required placeholder="e.g. Vintage Tee">

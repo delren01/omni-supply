@@ -1,9 +1,7 @@
 /* Import Inter font */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
-/* =========================================
-   1. GLOBAL VARIABLES & RESET
-   ========================================= */
+/* GLOBAL VARIABLES */
 :root {
     --primary-color: #2563EB;
     --text-dark: #111827;
@@ -18,10 +16,10 @@
     --stat-red-text: #DC2626;
     --stat-green-text: #16A34A;
 
-    /* LOGIN PAGE SPECIFIC VARS (The "Blue Theme" Upgrade) */
-    --login-gradient-start: #3b82f6; /* Blue 500 */
-    --login-gradient-mid: #2563eb;   /* Blue 600 (Matches Primary) */
-    --login-gradient-end: #60a5fa;   /* Blue 400 */
+    /* LOGIN PAGE */
+    --login-gradient-start: #3b82f6;
+    --login-gradient-mid: #2563eb;
+    --login-gradient-end: #60a5fa;
     --login-shadow: rgba(37, 99, 235, 0.2);
 }
 
@@ -34,9 +32,7 @@ body {
     margin: 0;
 }
 
-/* =========================================
-   2. DASHBOARD & NAVBAR STYLES
-   ========================================= */
+/* DASHBOARD & NAVIGATION */
 .navbar-custom { background-color: var(--navbar-blue) !important; color: white; }
 .navbar-custom .btn-light { background-color: #F3F4F6; color: var(--text-dark); border: none; font-weight: 600; }
 .navbar-custom .btn-light:hover { background-color: #E5E7EB; color: var(--text-dark); }
@@ -63,78 +59,17 @@ h1, h2, h3, h4, h5, h6 { font-weight: 700; color: var(--text-dark); letter-spaci
 .stat-icon.red { background-color: var(--red-icon); color: var(--stat-red-text); }
 .stat-icon.green { background-color: var(--green-icon); color: var(--stat-green-text); }
 
-/* =========================================
-   3. LOGIN PAGE STYLES (INTEGRATED)
-   ========================================= */
+/* LOGIN PAGE */
 
-/* Use a specific class for login body so it doesn't affect dashboard */
 .login-page-body {
-    min-height: 100vh;
+    height: 100vh;
+    width: 100vw;
     display: flex;
     align-items: center;
     justify-content: center;
     background: linear-gradient(135deg, var(--login-gradient-start) 0%, var(--login-gradient-mid) 50%, var(--login-gradient-end) 100%);
     position: relative;
-    overflow-y: auto;
-    padding: 40px 20px;
-}
-
-/* Animated Background Particles */
-.login-bg-overlay {
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
-    background-size: 50px 50px;
-    animation: moveBackground 20s linear infinite;
-    pointer-events: none;
-}
-
-@keyframes moveBackground {
-    0% { transform: translate(0, 0); }
-    100% { transform: translate(50px, 50px); }
-}
-
-.login-container {
-    position: relative;
-    z-index: 1;
-    width: 100%;
-    max-width: 420px; /* Slightly tighter for cleaner look */
-    margin: 20px;
-}
-
-/* Glassmorphism Card */
-.login-card {
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(12px);
-    border-radius: 24px;
-    padding: 32px 32px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-    animation: slideUp 0.6s ease-out;
-    border: 1px solid rgba(255,255,255,0.5);
-}
-
-@keyframes slideUp {
-    from { opacity: 0; transform: translateY(30px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-/* Logo Styling */
-/* =========================================
-   3. LOGIN PAGE STYLES (ULTRA COMPACT / NO SCROLL)
-   ========================================= */
-
-/* 1. LOCK THE VIEWPORT */
-.login-page-body {
-    height: 100vh;            /* Force exact viewport height */
-    width: 100vw;             /* Force exact viewport width */
-    display: flex;
-    align-items: center;      /* Vertical Center */
-    justify-content: center;  /* Horizontal Center */
-    background: linear-gradient(135deg, var(--login-gradient-start) 0%, var(--login-gradient-mid) 50%, var(--login-gradient-end) 100%);
-    position: relative;
-    overflow: hidden;         /* CRITICAL: Kills the scrollbar */
+    overflow: hidden;
     margin: 0;
     padding: 0;
 }
@@ -142,7 +77,7 @@ h1, h2, h3, h4, h5, h6 { font-weight: 700; color: var(--text-dark); letter-spaci
 /* Background Animation Layer */
 .login-bg-overlay {
     position: absolute;
-    top: -50%; left: -50%;    /* Center the huge background */
+    top: -50%; left: -50%;
     width: 200%;
     height: 200%;
     background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
@@ -161,17 +96,18 @@ h1, h2, h3, h4, h5, h6 { font-weight: 700; color: var(--text-dark); letter-spaci
     position: relative;
     z-index: 10;
     width: 100%;
-    max-width: 380px; /* Narrower container */
+    max-width: 380px;
+    padding: 20px; /* Added padding for small screens */
 }
 
-/* Glass Card - TIGHT SPACING */
+/* Glass Card */
 .login-card {
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(12px);
     border-radius: 16px;
-    padding: 30px 25px; /* Very tight padding */
+    padding: 30px 25px;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-    animation: zoomIn 0.5s cubic-bezier(0.16, 1, 0.3, 1); /* Snappy pop-in animation */
+    animation: zoomIn 0.5s cubic-bezier(0.16, 1, 0.3, 1);
     border: 1px solid rgba(255,255,255,0.5);
 }
 
@@ -180,11 +116,11 @@ h1, h2, h3, h4, h5, h6 { font-weight: 700; color: var(--text-dark); letter-spaci
     to { opacity: 1; transform: scale(1); }
 }
 
-/* Logo - SMALLER */
+/* Logo */
 .logo-container { text-align: center; margin-bottom: 15px; }
 
 .logo {
-    width: 48px; height: 48px; /* Small Icon (was 60px) */
+    width: 48px; height: 48px;
     margin: 0 auto 10px;
     background: linear-gradient(135deg, var(--login-gradient-start) 0%, var(--login-gradient-mid) 100%);
     border-radius: 12px;
@@ -202,7 +138,7 @@ h1, h2, h3, h4, h5, h6 { font-weight: 700; color: var(--text-dark); letter-spaci
 }
 
 .login-card h1 {
-    font-size: 20px; /* Compact Header */
+    font-size: 20px;
     font-weight: 800; text-align: center; margin-bottom: 4px;
     background: linear-gradient(135deg, var(--login-gradient-start) 0%, var(--login-gradient-mid) 100%);
     -webkit-background-clip: text;
@@ -212,12 +148,12 @@ h1, h2, h3, h4, h5, h6 { font-weight: 700; color: var(--text-dark); letter-spaci
 
 .subtitle { text-align: center; color: #64748b; font-size: 12px; margin-bottom: 20px; }
 
-/* Form Elements - DENSE */
+/* Form Elements */
 .form-group { margin-bottom: 12px; }
 .form-group label { display: block; font-weight: 700; margin-bottom: 4px; color: #475569; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
 
 .form-group input {
-    width: 100%; padding: 10px 14px; /* Slimmer inputs */
+    width: 100%; padding: 10px 14px;
     border: 2px solid #e2e8f0; border-radius: 8px;
     font-size: 13px; transition: all 0.2s ease;
     background: #F8FAFC; color: #1e293b;
@@ -229,7 +165,7 @@ h1, h2, h3, h4, h5, h6 { font-weight: 700; color: var(--text-dark); letter-spaci
 }
 
 .sign-in-btn {
-    width: 100%; padding: 12px; /* Slimmer button */
+    width: 100%; padding: 12px;
     background: linear-gradient(135deg, var(--login-gradient-start) 0%, var(--login-gradient-mid) 100%);
     color: white; border: none; border-radius: 8px;
     font-size: 14px; font-weight: 600; cursor: pointer;
@@ -251,7 +187,7 @@ h1, h2, h3, h4, h5, h6 { font-weight: 700; color: var(--text-dark); letter-spaci
 .create-account a { color: var(--login-gradient-mid); text-decoration: none; font-weight: 600; }
 .create-account a:hover { text-decoration: underline; }
 
-/* Credentials Box - MINI */
+/* Credentials Box */
 .credentials-box {
     margin-top: 20px;
     padding: 12px;
@@ -267,14 +203,7 @@ h1, h2, h3, h4, h5, h6 { font-weight: 700; color: var(--text-dark); letter-spaci
 
 
 /* Register Page */
-
-/* The Manager Section Container */
-.manager-section {
-    margin-top: 8px;
-    margin-bottom: 12px;
-}
-
-/* The "Optional" Badge */
+.manager-section { margin-top: 8px; margin-bottom: 12px; }
 .optional-badge {
     font-size: 9px;
     text-transform: uppercase;
@@ -285,30 +214,22 @@ h1, h2, h3, h4, h5, h6 { font-weight: 700; color: var(--text-dark); letter-spaci
     font-weight: 700;
     letter-spacing: 0.5px;
 }
-
-
 .manager-input {
     background-color: rgba(239, 68, 68, 0.05) !important;
     border-color: #fee2e2 !important;
     font-size: 12px !important;
     padding: 8px 12px !important;
 }
-
 .manager-input:focus {
     border-color: #f87171 !important;
     box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1) !important;
 }
-
-.manager-input::placeholder {
-    color: #cbd5e1;
-    font-style: italic;
-}
+.manager-input::placeholder { color: #cbd5e1; font-style: italic; }
 
 /* Customer Store Front */
-
 .store-body {
     background-color: #F8FAFC;
-    padding-top: 70px; /* Space for fixed navbar */
+    padding-top: 70px;
 }
 
 /* Glassy Navbar */
@@ -319,7 +240,6 @@ h1, h2, h3, h4, h5, h6 { font-weight: 700; color: var(--text-dark); letter-spaci
     height: 70px;
 }
 
-/* Small Logo for Navbar */
 .store-logo {
     width: 36px; height: 36px;
     background: linear-gradient(135deg, var(--login-gradient-start) 0%, var(--login-gradient-mid) 100%);
@@ -345,44 +265,24 @@ h1, h2, h3, h4, h5, h6 { font-weight: 700; color: var(--text-dark); letter-spaci
     overflow: hidden;
     background: white;
 }
-
 .store-card:hover {
     transform: translateY(-8px);
     box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
-
-.product-placeholder {
-    height: 180px;
-    background: #F1F5F9;
-    position: relative;
-}
-
+.product-placeholder { height: 180px; background: #F1F5F9; position: relative; }
 .category-badge {
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    background: white;
-    color: var(--text-dark);
-    font-size: 11px;
-    font-weight: 700;
-    text-transform: uppercase;
-    padding: 4px 10px;
-    border-radius: 20px;
+    position: absolute; top: 12px; right: 12px;
+    background: white; color: var(--text-dark);
+    font-size: 11px; font-weight: 700; text-transform: uppercase;
+    padding: 4px 10px; border-radius: 20px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
-/* Typography tweaks */
-.tracking-tight {
-    letter-spacing: -0.02em;
-}
+.tracking-tight { letter-spacing: -0.02em; }
 
 /* Manager Dashboard */
+.dashboard-body { background-color: #F8FAFC; }
 
-.dashboard-body {
-    background-color: #F8FAFC;
-}
-
-/* Dashboard Navbar */
 .dashboard-navbar {
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(10px);
@@ -396,25 +296,15 @@ h1, h2, h3, h4, h5, h6 { font-weight: 700; color: var(--text-dark); letter-spaci
     border-radius: 8px;
     display: flex; align-items: center; justify-content: center;
 }
+.logo-small svg { width: 18px; height: 18px; }
 
-.logo-small svg {
-    width: 18px;
-    height: 18px;
-}
-
-/* Stat Cards */
 .stat-card {
-    border: none;
-    border-radius: 16px;
+    border: none; border-radius: 16px;
     box-shadow: 0 2px 6px rgba(0,0,0,0.02);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     background: white;
 }
-
-.stat-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.05);
-}
+.stat-card:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
 
 .stat-icon-box {
     width: 48px; height: 48px;
@@ -429,25 +319,10 @@ h1, h2, h3, h4, h5, h6 { font-weight: 700; color: var(--text-dark); letter-spaci
 .bg-green-soft { background-color: #F0FDF4; }
 
 /* Soft Buttons */
-.btn-white {
-    background: white;
-    color: var(--text-dark);
-    border-color: #e5e7eb;
-}
-.btn-white:hover {
-    background: #f9fafb;
-}
-
-.btn-danger-soft {
-    background: #FEF2F2;
-    color: #DC2626;
-    border: none;
-    font-weight: 600;
-}
-.btn-danger-soft:hover {
-    background: #fee2e2;
-    color: #b91c1c;
-}
+.btn-white { background: white; color: var(--text-dark); border-color: #e5e7eb; }
+.btn-white:hover { background: #f9fafb; }
+.btn-danger-soft { background: #FEF2F2; color: #DC2626; border: none; font-weight: 600; }
+.btn-danger-soft:hover { background: #fee2e2; color: #b91c1c; }
 
 .form-control:focus, .form-select:focus {
     background-color: white !important;
@@ -455,17 +330,79 @@ h1, h2, h3, h4, h5, h6 { font-weight: 700; color: var(--text-dark); letter-spaci
     border-color: var(--primary-color);
 }
 
-/* Shopping Cart Page */
+/* Shopping Cart */
+.cart-item { transition: background-color 0.2s; }
+.cart-item:hover { background-color: #f8fafc; }
+.cart-item-icon { background: #EFF6FF; color: var(--primary-color); }
 
-/* Hover effect for cart rows */
-.cart-item {
-    transition: background-color 0.2s;
-}
-.cart-item:hover {
-    background-color: #f8fafc;
-}
+/* MOBILE RESPONSIVENESS */
 
-.cart-item-icon {
-    background: #EFF6FF;
-    color: var(--primary-color);
+@media (max-width: 768px) {
+    /* Login Page */
+    .login-container {
+        max-width: 100%;
+        padding: 15px;
+    }
+    .login-card {
+        padding: 25px 20px;
+        border-radius: 20px;
+    }
+
+    /* Dashboard & Store Navbar */
+    .dashboard-navbar .container,
+    .store-navbar .container {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    /* Hide some navbar text on small screens if needed */
+    .store-navbar .btn span:not(.badge) {
+        display: none; /* Hides "Cart" text but keeps icon & badge */
+    }
+    .store-navbar .btn i {
+        font-size: 1.2rem;
+    }
+
+    /* Stack the Stat Cards */
+    .stat-card {
+        margin-bottom: 15px;
+    }
+
+    /* Adjust Tables for Mobile */
+    .table-responsive {
+        border-radius: 12px;
+        border: 1px solid #E5E7EB;
+        overflow-x: auto;
+    }
+    .table thead th {
+        white-space: nowrap;
+    }
+
+    /* Shopping Cart Mobile */
+    .cart-item {
+        flex-direction: column;
+        align-items: flex-start !important;
+        position: relative;
+    }
+    .cart-item .flex-grow-1 {
+        margin-bottom: 10px;
+        width: 100%;
+    }
+    .cart-item .fw-bold.text-end {
+        text-align: left !important;
+        margin-bottom: 10px;
+    }
+
+    /* Position the remove button absolutely on mobile cards */
+    .cart-item .text-end:last-child {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+    }
+
+    /* Hero Height adjustment */
+    .store-hero {
+        height: 200px;
+        border-radius: 0 0 25px 25px;
+    }
 }
