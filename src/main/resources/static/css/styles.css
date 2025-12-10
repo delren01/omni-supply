@@ -279,6 +279,37 @@ h1, h2, h3, h4, h5, h6 { font-weight: 700; color: var(--text-dark); letter-spaci
 
 .tracking-tight { letter-spacing: -0.02em; }
 
+/* MANAGER RETURN DASHBOARD TAB */
+.manager-return-fab {
+    /* Positioning */
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+
+    /* Appearance */
+    width: 50px;
+    height: 50px;
+    background-color: var(--primary-color);
+    color: white;
+    border-radius: 50%;
+
+    /* Center Icon */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    text-decoration: none;
+
+    /* Animation/Shadow */
+    transition: background-color 0.2s, transform 0.2s;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.manager-return-fab:hover {
+    background-color: #1e40af; /* Darker blue on hover */
+    transform: scale(1.05);
+}
 /* Manager Dashboard */
 .dashboard-body { background-color: #F8FAFC; }
 
@@ -412,5 +443,9 @@ h1, h2, h3, h4, h5, h6 { font-weight: 700; color: var(--text-dark); letter-spaci
     .store-hero {
         height: 200px;
         border-radius: 0 0 25px 25px;
+    }
+
+    .manager-return-fab {
+            bottom: 70px;
     }
 }
