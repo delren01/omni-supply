@@ -1,16 +1,15 @@
 /* Import Inter font */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
-* {
-    box-sizing: border-box;
-}
-
-/* GLOBAL RESET */
+/* =========================================
+   1. GLOBAL VARIABLES & RESET
+   ========================================= */
 :root {
     --primary-color: #2563EB;
     --text-dark: #111827;
     --text-muted: #6B7280;
     --navbar-blue: #1E3A8A;
+
     /* Icon Colors */
     --blue-icon: #EBF5FF;
     --red-icon: #FEF2F2;
@@ -18,7 +17,15 @@
     --stat-blue-text: #2563EB;
     --stat-red-text: #DC2626;
     --stat-green-text: #16A34A;
+
+    /* LOGIN PAGE SPECIFIC VARS (The "Blue Theme" Upgrade) */
+    --login-gradient-start: #3b82f6; /* Blue 500 */
+    --login-gradient-mid: #2563eb;   /* Blue 600 (Matches Primary) */
+    --login-gradient-end: #60a5fa;   /* Blue 400 */
+    --login-shadow: rgba(37, 99, 235, 0.2);
 }
+
+* { box-sizing: border-box; }
 
 body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -27,194 +34,438 @@ body {
     margin: 0;
 }
 
-.navbar-custom {
-    background-color: var(--navbar-blue) !important;
-    color: white;
-}
+/* =========================================
+   2. DASHBOARD & NAVBAR STYLES
+   ========================================= */
+.navbar-custom { background-color: var(--navbar-blue) !important; color: white; }
+.navbar-custom .btn-light { background-color: #F3F4F6; color: var(--text-dark); border: none; font-weight: 600; }
+.navbar-custom .btn-light:hover { background-color: #E5E7EB; color: var(--text-dark); }
 
-/* Specific styling for the Logout button */
-.navbar-custom .btn-light {
-    background-color: #F3F4F6;
-    color: var(--text-dark);
-    border: none;
-    font-weight: 600;
-}
+h1, h2, h3, h4, h5, h6 { font-weight: 700; color: var(--text-dark); letter-spacing: -0.02em; }
+.page-title { font-size: 1.75rem; margin-bottom: 0; }
+.section-title { font-size: 1.1rem; font-weight: 600; color: var(--text-dark); margin-bottom: 0; }
 
-.navbar-custom .btn-light:hover {
-    background-color: #E5E7EB;
-    color: var(--text-dark);
-}
+/* Dashboard Cards */
+.card { border: none; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06); transition: all 0.2s ease-in-out; }
+.card-header { background-color: transparent; border-bottom: 1px solid #E5E7EB; padding: 1rem 1.5rem; }
+.stat-label { font-size: 0.875rem; color: var(--text-muted); font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; }
+.stat-value { font-size: 2rem; font-weight: 700; line-height: 1.2; }
 
-/* LOGIN PAGE */
-.login-body {
+/* Dashboard Tables */
+.table thead th { background-color: #F9FAFB; font-weight: 600; font-size: 0.85rem; text-transform: uppercase; color: var(--text-muted); border-bottom: 1px solid #E5E7EB; }
+.table td { vertical-align: middle; font-size: 0.95rem; }
+
+/* Dashboard Icons */
+.stat-icon { width: 60px; height: 60px; position: relative; border-radius: 12px; transition: transform 0.2s; display: block; }
+.card:hover .stat-icon { transform: scale(1.1); }
+.card .stat-icon i { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 1rem; margin: 0; padding: 0; line-height: 1; }
+.stat-icon.blue { background-color: var(--blue-icon); color: var(--stat-blue-text); }
+.stat-icon.red { background-color: var(--red-icon); color: var(--stat-red-text); }
+.stat-icon.green { background-color: var(--green-icon); color: var(--stat-green-text); }
+
+/* =========================================
+   3. LOGIN PAGE STYLES (INTEGRATED)
+   ========================================= */
+
+/* Use a specific class for login body so it doesn't affect dashboard */
+.login-page-body {
+    min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: 100vh; /* Takes full viewport height */
-    background-color: #F3F4F6;
+    background: linear-gradient(135deg, var(--login-gradient-start) 0%, var(--login-gradient-mid) 50%, var(--login-gradient-end) 100%);
+    position: relative;
+    overflow-y: auto;
+    padding: 40px 20px;
 }
 
+/* Animated Background Particles */
+.login-bg-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+    background-size: 50px 50px;
+    animation: moveBackground 20s linear infinite;
+    pointer-events: none;
+}
+
+@keyframes moveBackground {
+    0% { transform: translate(0, 0); }
+    100% { transform: translate(50px, 50px); }
+}
+
+.login-container {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 420px; /* Slightly tighter for cleaner look */
+    margin: 20px;
+}
+
+/* Glassmorphism Card */
 .login-card {
     background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(10px);
-    border-radius: 16px;
-    padding: 2.5rem;
-    width: 100%;
-    max-width: 400px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(12px);
+    border-radius: 24px;
+    padding: 32px 32px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    animation: slideUp 0.6s ease-out;
+    border: 1px solid rgba(255,255,255,0.5);
+}
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Logo Styling */
+/* =========================================
+   3. LOGIN PAGE STYLES (ULTRA COMPACT / NO SCROLL)
+   ========================================= */
+
+/* 1. LOCK THE VIEWPORT */
+.login-page-body {
+    height: 100vh;            /* Force exact viewport height */
+    width: 100vw;             /* Force exact viewport width */
     display: flex;
-    flex-direction: column;
+    align-items: center;      /* Vertical Center */
+    justify-content: center;  /* Horizontal Center */
+    background: linear-gradient(135deg, var(--login-gradient-start) 0%, var(--login-gradient-mid) 50%, var(--login-gradient-end) 100%);
+    position: relative;
+    overflow: hidden;         /* CRITICAL: Kills the scrollbar */
+    margin: 0;
+    padding: 0;
 }
 
-.login-logo {
-    max-height: 80px;
-    width: auto;
-    margin: 0 auto 20px auto;
-    display: block;
-    object-fit: contain;
+/* Background Animation Layer */
+.login-bg-overlay {
+    position: absolute;
+    top: -50%; left: -50%;    /* Center the huge background */
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+    background-size: 40px 40px;
+    animation: moveBackground 20s linear infinite;
+    pointer-events: none;
+    z-index: 0;
 }
 
-.login-text-muted {
-    font-size: 12px;
-    color: #666;
-    text-align: center;
-    margin-top: 20px;
-    border-top: 1px solid #eee;
-    padding-top: 15px;
+@keyframes moveBackground {
+    0% { transform: translate(0, 0); }
+    100% { transform: translate(40px, 40px); }
 }
 
-.btn-blue {
-    background-color: var(--primary-color);
-    text-align: center;
-    padding: .65rem;
-    color: white;
-    height: 45px;
-    border-radius: 8px;
-    font-weight: 600;
-    font-size: 14px;
+.login-container {
+    position: relative;
+    z-index: 10;
     width: 100%;
-    border: none;
-    margin-top: 10px;
-    transition: transform 0.2s, background-color 0.2s;
+    max-width: 380px; /* Narrower container */
 }
 
-.btn-blue:hover {
-    background-color: #1d4ed8;
-    color: white;
+/* Glass Card - TIGHT SPACING */
+.login-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(12px);
+    border-radius: 16px;
+    padding: 30px 25px; /* Very tight padding */
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    animation: zoomIn 0.5s cubic-bezier(0.16, 1, 0.3, 1); /* Snappy pop-in animation */
+    border: 1px solid rgba(255,255,255,0.5);
+}
+
+@keyframes zoomIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+/* Logo - SMALLER */
+.logo-container { text-align: center; margin-bottom: 15px; }
+
+.logo {
+    width: 48px; height: 48px; /* Small Icon (was 60px) */
+    margin: 0 auto 10px;
+    background: linear-gradient(135deg, var(--login-gradient-start) 0%, var(--login-gradient-mid) 100%);
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 6px 15px var(--login-shadow);
+    position: relative; overflow: hidden;
+}
+
+.logo-icon { width: 26px; height: 26px; z-index: 2; position: relative; }
+.logo-icon svg { width: 100%; height: 100%; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.1)); }
+
+.logo::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.3) 0%, transparent 100%);
+}
+
+.login-card h1 {
+    font-size: 20px; /* Compact Header */
+    font-weight: 800; text-align: center; margin-bottom: 4px;
+    background: linear-gradient(135deg, var(--login-gradient-start) 0%, var(--login-gradient-mid) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.subtitle { text-align: center; color: #64748b; font-size: 12px; margin-bottom: 20px; }
+
+/* Form Elements - DENSE */
+.form-group { margin-bottom: 12px; }
+.form-group label { display: block; font-weight: 700; margin-bottom: 4px; color: #475569; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+.form-group input {
+    width: 100%; padding: 10px 14px; /* Slimmer inputs */
+    border: 2px solid #e2e8f0; border-radius: 8px;
+    font-size: 13px; transition: all 0.2s ease;
+    background: #F8FAFC; color: #1e293b;
+}
+
+.form-group input:focus {
+    outline: none; border-color: var(--login-gradient-mid); background: white;
+    box-shadow: 0 0 0 3px var(--login-shadow);
+}
+
+.sign-in-btn {
+    width: 100%; padding: 12px; /* Slimmer button */
+    background: linear-gradient(135deg, var(--login-gradient-start) 0%, var(--login-gradient-mid) 100%);
+    color: white; border: none; border-radius: 8px;
+    font-size: 14px; font-weight: 600; cursor: pointer;
+    transition: all 0.2s ease; margin-top: 8px;
+    box-shadow: 0 4px 10px var(--login-shadow);
+}
+
+.sign-in-btn:hover {
     transform: translateY(-1px);
+    box-shadow: 0 6px 15px var(--login-shadow);
 }
 
-/* DASHBOARD */
+.create-account {
+    text-align: center;
+    margin-top: 15px;
+    font-size: 12px;
+    color: #64748b;
+}
+.create-account a { color: var(--login-gradient-mid); text-decoration: none; font-weight: 600; }
+.create-account a:hover { text-decoration: underline; }
 
-/* TYPOGRAPHY HIERARCHY */
-h1, h2, h3, h4, h5, h6 {
+/* Credentials Box - MINI */
+.credentials-box {
+    margin-top: 20px;
+    padding: 12px;
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(37, 99, 235, 0.05) 100%);
+    border-radius: 8px;
+    border-left: 3px solid var(--login-gradient-mid);
+}
+
+.credentials-box h3 { font-size: 10px; font-weight: 800; color: var(--login-gradient-mid); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+.credential-item { display: flex; align-items: center; margin-bottom: 4px; font-size: 11px; color: #475569; }
+.credential-item strong { min-width: 60px; color: #334155; font-weight: 700; }
+.divider { height: 1px; background: linear-gradient(90deg, transparent, #e2e8f0, transparent); margin: 8px 0; }
+
+
+/* Register Page */
+
+/* The Manager Section Container */
+.manager-section {
+    margin-top: 8px;
+    margin-bottom: 12px;
+}
+
+/* The "Optional" Badge */
+.optional-badge {
+    font-size: 9px;
+    text-transform: uppercase;
+    background-color: #F1F5F9;
+    color: #64748b;
+    padding: 2px 6px;
+    border-radius: 4px;
     font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+
+.manager-input {
+    background-color: rgba(239, 68, 68, 0.05) !important;
+    border-color: #fee2e2 !important;
+    font-size: 12px !important;
+    padding: 8px 12px !important;
+}
+
+.manager-input:focus {
+    border-color: #f87171 !important;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1) !important;
+}
+
+.manager-input::placeholder {
+    color: #cbd5e1;
+    font-style: italic;
+}
+
+/* Customer Store Front */
+
+.store-body {
+    background-color: #F8FAFC;
+    padding-top: 70px; /* Space for fixed navbar */
+}
+
+/* Glassy Navbar */
+.store-navbar {
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    height: 70px;
+}
+
+/* Small Logo for Navbar */
+.store-logo {
+    width: 36px; height: 36px;
+    background: linear-gradient(135deg, var(--login-gradient-start) 0%, var(--login-gradient-mid) 100%);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+}
+.store-logo svg { width: 20px; height: 20px; }
+
+/* Hero Banner */
+.store-hero {
+    background: linear-gradient(135deg, var(--login-gradient-start) 0%, var(--login-gradient-mid) 100%);
+    height: 280px;
+    border-radius: 0 0 40px 40px;
+    margin-bottom: 20px;
+}
+
+/* Product Card Styling */
+.store-card {
+    border: none;
+    border-radius: 16px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    overflow: hidden;
+    background: white;
+}
+
+.store-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.product-placeholder {
+    height: 180px;
+    background: #F1F5F9;
+    position: relative;
+}
+
+.category-badge {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: white;
     color: var(--text-dark);
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+/* Typography tweaks */
+.tracking-tight {
     letter-spacing: -0.02em;
 }
 
-.page-title {
-    font-size: 1.75rem;
-    margin-bottom: 0;
+/* Manager Dashboard */
+
+.dashboard-body {
+    background-color: #F8FAFC;
 }
 
-.section-title {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: var(--text-dark);
-    margin-bottom: 0;
+/* Dashboard Navbar */
+.dashboard-navbar {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    height: 70px;
 }
 
-/* CARDS */
-.card {
+.logo-small {
+    width: 32px; height: 32px;
+    background: linear-gradient(135deg, var(--login-gradient-start) 0%, var(--login-gradient-mid) 100%);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+}
+
+.logo-small svg {
+    width: 18px;
+    height: 18px;
+}
+
+/* Stat Cards */
+.stat-card {
     border: none;
+    border-radius: 16px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    background: white;
+}
+
+.stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+}
+
+.stat-icon-box {
+    width: 48px; height: 48px;
     border-radius: 12px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
-    transition: all 0.2s ease-in-out;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.25rem;
 }
 
-.card-header {
-    background-color: transparent;
-    border-bottom: 1px solid #E5E7EB;
-    padding: 1rem 1.5rem;
+/* Background Utility Classes */
+.bg-blue-soft { background-color: #EFF6FF; }
+.bg-red-soft { background-color: #FEF2F2; }
+.bg-green-soft { background-color: #F0FDF4; }
+
+/* Soft Buttons */
+.btn-white {
+    background: white;
+    color: var(--text-dark);
+    border-color: #e5e7eb;
+}
+.btn-white:hover {
+    background: #f9fafb;
 }
 
-/* STAT CARDS TEXT */
-.stat-label {
-    font-size: 0.875rem;
-    color: var(--text-muted);
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-}
-
-.stat-value {
-    font-size: 2rem;
-    font-weight: 700;
-    line-height: 1.2;
-}
-
-/* TABLE STYLING */
-.table thead th {
-    background-color: #F9FAFB;
+.btn-danger-soft {
+    background: #FEF2F2;
+    color: #DC2626;
+    border: none;
     font-weight: 600;
-    font-size: 0.85rem;
-    text-transform: uppercase;
-    color: var(--text-muted);
-    border-bottom: 1px solid #E5E7EB;
+}
+.btn-danger-soft:hover {
+    background: #fee2e2;
+    color: #b91c1c;
 }
 
-.table td {
-    vertical-align: middle;
-    font-size: 0.95rem;
-}
-
-/* BUTTONS */
-.btn-primary {
-    background-color: var(--primary-color);
+.form-control:focus, .form-select:focus {
+    background-color: white !important;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
     border-color: var(--primary-color);
 }
 
-/* STAT ICONS */
-.stat-icon {
-    width: 60px;
-    height: 60px;
-    position: relative;
-    border-radius: 12px;
-    transition: transform 0.2s;
-    display: block;
+/* Shopping Cart Page */
+
+/* Hover effect for cart rows */
+.cart-item {
+    transition: background-color 0.2s;
+}
+.cart-item:hover {
+    background-color: #f8fafc;
 }
 
-.card:hover .stat-icon {
-    transform: scale(1.1);
-}
-
-.card .stat-icon i {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 1rem;
-    margin: 0;
-    padding: 0;
-    line-height: 1;
-}
-
-/* Color Variation for the Stat Icons */
-.stat-icon.blue {
-    background-color: var(--blue-icon);
-    color: var(--stat-blue-text);
-}
-
-/* Low Stock */
-.stat-icon.red {
-    background-color: var(--red-icon);
-    color: var(--stat-red-text);
-}
-
-/* Total Value */
-.stat-icon.green {
-    background-color: var(--green-icon);
-    color: var(--stat-green-text);
+.cart-item-icon {
+    background: #EFF6FF;
+    color: var(--primary-color);
 }

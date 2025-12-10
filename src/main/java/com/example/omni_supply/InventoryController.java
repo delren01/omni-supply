@@ -5,8 +5,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import jakarta.servlet.http.HttpSession;
 
-// Import List to iterate over items
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -14,66 +15,113 @@ public class InventoryController {
 
     private final InventoryRepository repo;
 
-    // Connects to the Database automatically
     public InventoryController(InventoryRepository repo) {
         this.repo = repo;
     }
 
-    // Redirects everyone to the Login Page first
+    // --- NAVIGATION ROOTS ---
+
     @GetMapping("/")
     public String root() {
         return "redirect:/login";
     }
 
-    // MANAGER DASHBOARD: Full access with Stats
+    @GetMapping("/logout")
+    public String logout(HttpSession session) {
+        session.invalidate();
+        return "redirect:/login?logout";
+    }
+
+    // --- MANAGER DASHBOARD ---
+
     @GetMapping("/manager")
     public String viewManagerPage(Model model) {
-        // Fetch all items from the database
         List<InventoryItem> items = repo.findAll();
 
-        // Initialize variables for calculations
         int totalItems = items.size();
         int lowStockCount = 0;
         double totalValue = 0.0;
 
-        // Loop through items to calculate stats
         for (InventoryItem item : items) {
-            // Count low stock (less than 10)
             if (item.getQuantity() < 10) {
                 lowStockCount++;
             }
-            // Calculate value (Price * Quantity)
             totalValue += (item.getPrice() * item.getQuantity());
         }
 
-        // Send calculated stats + list to the HTML file
         model.addAttribute("items", items);
         model.addAttribute("totalItems", totalItems);
         model.addAttribute("lowStockCount", lowStockCount);
         model.addAttribute("totalValue", totalValue);
 
-        // Loads dashboard.html
         return "dashboard";
     }
 
-    // CUSTOMER VIEW: Read-Only access (Shopping Catalog)
+    // --- CUSTOMER STOREFRONT ---
+
     @GetMapping("/customer")
-    public String viewCustomerPage(Model model) {
+    public String viewCustomerPage(Model model, HttpSession session) {
+        // Fetch inventory items
         var items = repo.findAll();
         model.addAttribute("items", items);
+
+        // Check the session for the cart
+        List<InventoryItem> cart = (List<InventoryItem>) session.getAttribute("cart");
+        if (cart == null) {
+            cart = new ArrayList<>();
+        }
+        model.addAttribute("cartItems", cart);
+
         return "customer_view";
     }
 
-    // --- Manager Actions ---
+    @GetMapping("/cart")
+    public String viewCart(HttpSession session, Model model) {
+        List<InventoryItem> cart = (List<InventoryItem>) session.getAttribute("cart");
 
-    // HANDLE "ADD ITEM" FORM SUBMIT
+        if (cart == null) {
+            cart = new ArrayList<>();
+        }
+
+        double total = 0.0;
+        for (InventoryItem item : cart) {
+            total += item.getPrice();
+        }
+
+        model.addAttribute("cartItems", cart);
+        model.addAttribute("total", total);
+
+        return "cart";
+    }
+
+    @GetMapping("/addToCart/{id}")
+    public String addToCart(@PathVariable("id") Long id, HttpSession session) {
+        List<InventoryItem> cart = (List<InventoryItem>) session.getAttribute("cart");
+        if (cart == null) {
+            cart = new ArrayList<>();
+        }
+
+        // Find item and add to session cart
+        repo.findById(id).ifPresent(cart::add);
+        session.setAttribute("cart", cart);
+
+        return "redirect:/customer";
+    }
+
+    @GetMapping("/clearCart")
+    public String clearCart(HttpSession session) {
+        session.removeAttribute("cart");
+        return "redirect:/cart";
+    }
+
+    // --- MANAGER ACTIONS ---
+
     @PostMapping("/save")
     public String saveItem(InventoryItem item) {
         repo.save(item);
-        return "redirect:/manager"; // Go back to Manager Dashboard
+        return "redirect:/manager";
     }
 
-    // SHOW EDIT FORM
     @GetMapping("/edit/{id}")
     public String showEditForm(@PathVariable("id") Long id, Model model) {
         InventoryItem item = repo.findById(id)
@@ -83,7 +131,6 @@ public class InventoryController {
         return "edit_item";
     }
 
-    // SAVE UPDATES
     @PostMapping("/update/{id}")
     public String updateItem(@PathVariable("id") Long id, InventoryItem item) {
         item.setId(id);
@@ -91,7 +138,6 @@ public class InventoryController {
         return "redirect:/manager";
     }
 
-    // DELETE ITEM
     @GetMapping("/delete/{id}")
     public String deleteItem(@PathVariable("id") Long id) {
         repo.deleteById(id);

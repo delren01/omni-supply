@@ -6,6 +6,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.ui.Model;
 
+// IMPORT SESSION
+import jakarta.servlet.http.HttpSession; // Use javax.servlet.http.HttpSession if on older Spring
+
 @Controller
 public class LoginController {
 
@@ -25,26 +28,21 @@ public class LoginController {
     @PostMapping("/perform_register")
     public String registerUser(@RequestParam String username,
                                @RequestParam String password,
-                               @RequestParam String secretCode) { // <--- Catch the code
+                               @RequestParam String secretCode) {
 
-        // Check if username already exists (Optional safety check)
         if (userRepo.findByUsername(username) != null) {
             return "redirect:/register?error=exists";
         }
 
-        // DETERMINE ROLE
-        String role = "CUSTOMER"; // Default role
+        String role = "CUSTOMER";
 
-        // If they know the secret code, then they are given manager role
         if ("admin2025".equals(secretCode)) {
             role = "MANAGER";
         }
 
-        // Save to Database
         User newUser = new User(username, password, role);
         userRepo.save(newUser);
 
-        // Send them to login page to sign in with their new account
         return "redirect:/login?success";
     }
 
@@ -56,29 +54,28 @@ public class LoginController {
     @PostMapping("/perform_login")
     public String processLogin(@RequestParam String username,
                                @RequestParam String password,
+                               HttpSession session, // <--- 1. Inject Session Here
                                Model model) {
 
-        // Cleans the inputs
         String cleanUser = username.trim();
         String cleanPass = password.trim();
 
-        // Finds user
         User user = userRepo.findByUsername(cleanUser);
 
-        System.out.println("Login Attempt: '" + cleanUser + "'");
-
         if (user == null) {
-            System.out.println("User not found in DB.");
             return "redirect:/login?error";
         }
 
-        // Check Password
         if (!user.getPassword().equals(cleanPass)) {
-            System.out.println("Password wrong. DB has: " + user.getPassword());
             return "redirect:/login?error";
         }
 
-        // Success
+        // --- 2. NEW LOGIC: SAVE TO SESSION ---
+        // This is what allows other pages (like the store) to know who you are
+        session.setAttribute("user", user.getUsername());
+        session.setAttribute("role", user.getRole());
+        // -------------------------------------
+
         if ("MANAGER".equalsIgnoreCase(user.getRole())) {
             return "redirect:/manager";
         } else {

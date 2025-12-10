@@ -1,41 +1,101 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Edit Item</title>
+    <title>Edit Item - OmniSupply</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link th:href="@{/css/styles.css}" rel="stylesheet">
 </head>
-<body class="container mt-5">
-<h2>Edit Inventory Item</h2>
+<body class="dashboard-body">
 
-<form th:action="@{/update/{id}(id=${item.id})}" th:object="${item}" method="post" class="mt-4">
+<nav class="navbar navbar-expand-lg navbar-light fixed-top dashboard-navbar">
+    <div class="container">
+        <a class="navbar-brand d-flex align-items-center" href="/manager">
+            <div class="logo-small me-2">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                    <circle cx="19" cy="5" r="3" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5"/>
+                    <text x="19" y="6.5" text-anchor="middle" font-size="4" font-weight="bold" fill="#2563eb">∞</text>
+                </svg>
+            </div>
+            <span class="fw-bold text-dark tracking-tight">OmniSupply</span>
+        </a>
 
-    <div class="mb-3">
-        <label>Item Name</label>
-        <input type="text" th:field="*{name}" class="form-control" required>
+        <a href="/manager" class="btn btn-sm btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Back to Dashboard
+        </a>
     </div>
+</nav>
 
-    <div class="mb-3">
-        <label>Category</label>
-        <input type="text" th:field="*{category}" class="form-control">
+<div class="container" style="margin-top: 100px; padding-bottom: 60px;">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+
+            <div class="card border-0 shadow-sm" style="border-radius: 20px; overflow: hidden;">
+
+                <div class="card-header bg-white border-0 pt-4 px-4 pb-0 text-center">
+                    <div class="d-inline-flex align-items-center justify-content-center bg-blue-soft text-primary rounded-circle mb-3" style="width: 50px; height: 50px;">
+                        <i class="bi bi-pencil-fill fs-5"></i>
+                    </div>
+                    <h4 class="fw-bold mb-1">Edit Item</h4>
+                    <p class="text-muted small">Update product details for ID: <span class="fw-bold" th:text="${item.id}">#</span></p>
+                </div>
+
+                <div class="card-body p-4">
+                    <form th:action="@{/update/{id}(id=${item.id})}" th:object="${item}" method="post">
+
+                        <div class="mb-4">
+                            <label class="form-label small fw-bold text-muted text-uppercase">Product Name</label>
+                            <input type="text" th:field="*{name}" class="form-control form-control-lg bg-light border-0" required placeholder="e.g. Vintage Tee">
+                        </div>
+
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                <label class="form-label small fw-bold text-muted text-uppercase">Category</label>
+                                <select th:field="*{category}" class="form-select bg-light border-0">
+                                    <option value="Tops">Tops</option>
+                                    <option value="Bottoms">Bottoms</option>
+                                    <option value="Footwear">Footwear</option>
+                                    <option value="Accessories">Accessories</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label small fw-bold text-muted text-uppercase">Size</label>
+                                <input type="text" th:field="*{size}" class="form-control bg-light border-0">
+                            </div>
+                        </div>
+
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                <label class="form-label small fw-bold text-muted text-uppercase">Price ($)</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light border-0 text-muted">$</span>
+                                    <input type="number" step="0.01" th:field="*{price}" class="form-control bg-light border-0" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label small fw-bold text-muted text-uppercase">Stock Quantity</label>
+                                <input type="number" th:field="*{quantity}" class="form-control bg-light border-0" required>
+                            </div>
+                        </div>
+
+                        <hr class="my-4 border-light">
+
+                        <div class="d-flex gap-3">
+                            <a href="/manager" class="btn btn-light w-100 py-2 fw-semibold text-muted">Cancel</a>
+                            <button type="submit" class="btn btn-primary w-100 py-2 fw-semibold shadow-sm">
+                                <i class="bi bi-check2-circle me-2"></i>Save Changes
+                            </button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+
+        </div>
     </div>
+</div>
 
-    <div class="mb-3">
-        <label>Size</label>
-        <input type="text" th:field="*{size}" class="form-control">
-    </div>
-
-    <div class="mb-3">
-        <label>Price</label>
-        <input type="number" step="0.01" th:field="*{price}" class="form-control">
-    </div>
-
-    <div class="mb-3">
-        <label>Quantity</label>
-        <input type="number" th:field="*{quantity}" class="form-control">
-    </div>
-
-    <button type="submit" class="btn btn-primary">Update Item</button>
-    <a href="/manager" class="btn btn-secondary">Cancel</a>
-</form>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

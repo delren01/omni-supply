@@ -1,40 +1,72 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Create Account</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootswatch@5.3.0/dist/zephyr/bootstrap.min.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account - OmniSupply</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
 </head>
-<body class="bg-light d-flex justify-content-center align-items-center vh-100">
+<body class="login-page-body">
 
-<div class="card shadow p-4" style="width: 400px;">
-    <h3 class="text-center mb-4">Create Account</h3>
+<div class="login-bg-overlay"></div>
 
-    <form action="/perform_register" method="post">
+<div class="login-container">
+    <div class="login-card">
 
-        <div class="mb-3">
-            <label>Username</label>
-            <input type="text" name="username" class="form-control" required>
+        <div class="text-center mb-3">
+            <h1 style="margin-bottom: 4px;">Create Account</h1>
+            <p class="subtitle" style="margin-bottom: 0;">Join OmniSupply IMS today</p>
         </div>
 
-        <div class="mb-3">
-            <label>Password</label>
-            <input type="password" name="password" class="form-control" required>
+        <form th:action="@{/perform_register}" method="POST">
+
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input
+                        type="text"
+                        id="username"
+                        name="username"
+                        placeholder="Choose a username"
+                        required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        placeholder="Create a password"
+                        required
+                >
+            </div>
+
+            <div class="manager-section">
+                <div class="divider"></div>
+                <div class="form-group mb-0">
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <label for="secretCode" class="mb-0">Manager Key</label>
+                        <span class="optional-badge">Optional</span>
+                    </div>
+                    <input
+                            type="password"
+                            id="secretCode"
+                            name="secretCode"
+                            class="manager-input"
+                            placeholder="Only for managers"
+                    >
+                </div>
+            </div>
+
+            <button type="submit" class="sign-in-btn">Sign Up</button>
+        </form>
+
+        <div class="create-account">
+            Already have an account? <a th:href="@{/login}">Sign In</a>
         </div>
 
-        <hr>
-
-        <div class="mb-3">
-            <!-- Manager Code: admin2025 -->
-            <label class="text-muted small">Are you a Manager?</label>
-            <input type="password" name="secretCode" class="form-control" placeholder="Enter Manager Key (Optional)">
-            <div class="form-text text-muted">Leave blank if you are a customer.</div>
-        </div>
-
-        <button type="submit" class="btn btn-success w-100">Sign Up</button>
-    </form>
-
-    <div class="text-center mt-3">
-        <a href="/login">Already have an account? Login</a>
     </div>
 </div>
 
